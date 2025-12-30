@@ -46,9 +46,8 @@ const wss = new WebSocketServer({
     // In production, strictly check origin. In dev, allow localhost tools.
     const origin = info.origin;
     const allowedOrigins = [
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      process.env.NEXT_PUBLIC_APP_URL // Allow custom env var
+      'https://securechat-tau.vercel.app',
+      'http://localhost:3000'
     ].filter(Boolean);
 
     // Allow requests with no origin (like curl or local tools) ONLY in development
