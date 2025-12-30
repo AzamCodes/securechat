@@ -12,7 +12,8 @@ import { WebSocketServer, WebSocket } from 'ws';
 import crypto from 'crypto';
 
 const WS_PORT = parseInt(process.env.WS_PORT || '3001', 10);
-const WS_HOST = process.env.WS_HOST || 'localhost';
+// const WS_HOST = process.env.WS_HOST || 'localhost';
+const WS_HOST = '0.0.0.0';
 
 // Store active WebSocket connections (peer_id -> WebSocket)
 const connections = new Map<string, WebSocket>();
