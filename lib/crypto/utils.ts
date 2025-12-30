@@ -42,9 +42,9 @@ export async function deriveMasterSecret(
 }
 
 export async function hkdf(
-    inputKeyMaterial: ArrayBuffer,
-    salt: ArrayBuffer,
-    info: ArrayBuffer
+    inputKeyMaterial: BufferSource,
+    salt: BufferSource,
+    info: BufferSource
 ): Promise<ArrayBuffer> {
     // Web Crypto HKDF
     const key = await window.crypto.subtle.importKey(
@@ -59,8 +59,8 @@ export async function hkdf(
         {
             name: 'HKDF',
             hash: 'SHA-256',
-            salt: new Uint8Array(salt),
-            info: new Uint8Array(info),
+            salt: salt,
+            info: info,
         },
         key,
         256 * 2 // Derive enough for Root + Chain (Example)
@@ -83,8 +83,8 @@ export async function encrypt(
 
 export async function decrypt(
     key: CryptoKey,
-    iv: Uint8Array,
-    ciphertext: ArrayBuffer
+    iv: BufferSource,
+    ciphertext: BufferSource
 ): Promise<string> {
     const decrypted = await window.crypto.subtle.decrypt(
         { name: 'AES-GCM', iv },
@@ -94,7 +94,7 @@ export async function decrypt(
     return new TextDecoder().decode(decrypted);
 }
 
-export async function importChainKey(raw: ArrayBuffer): Promise<CryptoKey> {
+export async function importChainKey(raw: BufferSource): Promise<CryptoKey> {
     return window.crypto.subtle.importKey(
         'raw',
         raw,

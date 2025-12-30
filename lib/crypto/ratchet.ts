@@ -109,7 +109,7 @@ export class DoubleRatchet {
         this.state.chainKeyRecv = nextChain;
 
         // 2. Decrypt
-        const plaintext = await Utils.decrypt(msgKey, iv, ciphertext);
+        const plaintext = await Utils.decrypt(msgKey, iv as any, ciphertext);
         this.state.msgCountRecv++;
 
         return plaintext;
