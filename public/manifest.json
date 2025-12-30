@@ -1,0 +1,27 @@
+{
+  "name": "Secure Chat V3",
+  "short_name": "SecureChat",
+  "description": "Enterprise-grade Double Ratchet E2EE Messaging. Zero Knowledge. Maximum Security.",
+  "id": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "security",
+    "communications",
+    "productivity"
+  ],
+  "dir": "ltr",
+  "lang": "en-US",
+  "prefer_related_applications": false
+}
