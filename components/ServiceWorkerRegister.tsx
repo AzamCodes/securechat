@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 export default function ServiceWorkerRegister() {
     const [isPwa, setIsPwa] = useState(false);
     const [swUpdateAvailable, setSwUpdateAvailable] = useState(false);
+    const [installPrompt, setInstallPrompt] = useState<any>(null);
 
     useEffect(() => {
         // 1. Register SW
@@ -45,14 +46,34 @@ export default function ServiceWorkerRegister() {
             });
         }
 
-        // 2. Check Display Mode
+        // 2. Check Display Mode & Installability
         const matchMedia = window.matchMedia('(display-mode: standalone)');
         setIsPwa(matchMedia.matches);
         const handler = (e: MediaQueryListEvent) => setIsPwa(e.matches);
         matchMedia.addEventListener('change', handler);
-        return () => matchMedia.removeEventListener('change', handler);
+
+        // Capture install prompt
+        const handleBeforeInstallPrompt = (e: any) => {
+            e.preventDefault();
+            setInstallPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        return () => {
+            matchMedia.removeEventListener('change', handler);
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
 
     }, []);
+
+    const handleInstallClick = async () => {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        const { outcome } = await installPrompt.userChoice;
+        if (outcome === 'accepted') {
+            setInstallPrompt(null);
+        }
+    };
 
     // 3. Render Status Indicators
     if (swUpdateAvailable) {
@@ -67,6 +88,23 @@ export default function ServiceWorkerRegister() {
                     className="px-3 py-1.5 bg-orange-600 text-white font-bold rounded hover:bg-orange-700 transition-colors"
                 >
                     Reload Now
+                </button>
+            </div>
+        );
+    }
+
+    // Show Install Button if not installed and prompt is available
+    if (!isPwa && installPrompt) {
+        return (
+            <div className="fixed bottom-4 right-4 z-[100] animate-in slide-in-from-bottom-2">
+                <button
+                    onClick={handleInstallClick}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:bg-blue-700 transition-colors"
+                >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Install App
                 </button>
             </div>
         );
